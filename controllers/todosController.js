@@ -2,9 +2,11 @@ const Todo = require('../models/todo');
 
 const catchAsync = require('../middleware/catchAsync');
 const AppError = require('../utils/appError');
+const ApiFeatures = require('../utils/apiFeatures');
 
 exports.getAllTodos = catchAsync(async (req, res, next) => {
-  const todos = await Todo.find();
+  const features = new ApiFeatures(Todo.find(), req.query).paginate();
+  const todos = await features.query;
 
   res.status(200).json({
     status: 'success',
